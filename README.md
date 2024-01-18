@@ -18,54 +18,36 @@
 
 2、yarn dev
 
-/**
- * @author 动态路由
- * @date 2024-01-18 星期四
- * @function
- * @param {}
- * @return {}
- */
-const generateRouteConfig = (): Record<string, any>[] => {
-  const { $, ...pathConfig } = generatePathConfig();
+```
 
-  return [
-    {
-      path: "/",
-      errorElement: <RootErrorBoundary />,
-      async lazy() {
-        if (!$) {
-          return {
-            Component: () => <div></div>,
-          };
-        }
-        const { schema } = await $();
-        return {
-          Component: () => <AMISRenderer schema={schema}></AMISRenderer>,
-        };
-      },
-      children: mapPathConfigToRoute(pathConfig),
-    },
-    {
-      path: "/editor/:id",
-      Component: PageEditor,
-    },
-    {
-      path: "*",
-      Component: NotFound,
-    },
-  ];
-};
 
+路由系统，参考 next.js 规则， $index 会自动解析为 react-router-dom， index： true.
+
+```typescript
+
+
+├── pages
+│   │   ├── $.tsx
+│   │   ├── $index.tsx
+│   │   └── demo
+│   │       ├── $.tsx
+│   │       ├── $index.tsx
+│   │       └── demo-child
+│   │           ├── $.tsx
+│   │           ├── $[name].tsx
+│   │           └── $index.tsx
+
+
+```
 
 浏览器打开：`http://localhost:8888/editor/1`，完成页面设置后，复制schema到`src/pages`新建以`const modules = import.meta.glob("/src/pages/**/$*.tsx") `规则结尾的文件，访问文件路径，即页面。
 
-```
 
 # 渲染器
 
 新增渲染器：table-crud（未集成页面设计器）, schema参考如下。
 
-```bash
+```typescript
 
 schema = {
   type: "page",
