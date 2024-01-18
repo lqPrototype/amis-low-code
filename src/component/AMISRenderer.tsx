@@ -3,9 +3,9 @@ import { getEnv } from "mobx-state-tree";
 import { IMainStore } from "../store";
 import qs from "qs";
 import { render as amisRender, utils, filter } from "amis";
-import React from "react";
+import React, { Suspense } from "react";
 
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { resolveLibSchema } from "./extendsRender";
 
 type ReacordAny = Record<string, any>;
@@ -185,8 +185,12 @@ export function schema2component(
       });
     }
 
+    componentDidMount(): void {
+      console.log("this.props:", this.props);
+    }
+
     render() {
-      const { router, schema, store } = this.props;
+      const { router, schema, store, isIndex = false } = this.props;
       let finalSchema = schema;
       let body: React.ReactNode;
 
@@ -213,7 +217,14 @@ export function schema2component(
         this.getEnv()
       );
 
-      return <>{body}</>;
+      return (
+        <div>
+          {body}
+          <Suspense fallback={<>加载中...</>}>
+            <Outlet />
+          </Suspense>
+        </div>
+      );
     }
   }
 

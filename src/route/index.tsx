@@ -69,7 +69,9 @@ const mapPathConfigToRoute = (
           const { schema } = await child();
 
           return {
-            Component: () => <AMISRenderer schema={schema}></AMISRenderer>,
+            Component: () => (
+              <AMISRenderer schema={schema} isIndex={isIndex}></AMISRenderer>
+            ),
           };
         },
       };
@@ -124,16 +126,6 @@ const generateRouteConfig = (): Record<string, any>[] => {
     {
       path: "/editor/:id",
       Component: PageEditor,
-    },
-    {
-      path: "/layout",
-      async lazy() {
-        const { Layout } = await import("./Layout");
-        return {
-          loader: () => mapPathConfigToRoute(pathConfig),
-          Component: Layout,
-        };
-      },
     },
     {
       path: "*",
